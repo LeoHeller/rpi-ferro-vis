@@ -1,1 +1,1 @@
-# rpi-ferro-vis
+visualiser using ferrofluid and raspberry pi
