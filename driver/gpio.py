@@ -17,32 +17,23 @@ w.pinMode(13, 1)
 # turn PIN13 off
 w.digitalWrite(13,0)
 
+w.pinMode(19, 1)
+w.digitalWrite(19,1)
+
+w.softPwmCreate(13,0,100)
+w.softPwmCreate(19,0,100)
 
 try:
+    helligkeit = 0
     while True:
-        w.digitalWrite(13, 1)
-        # delay 0.5s
-        sleep(0.5)          
-        w.digitalWrite(13, 0)
-        sleep(0.5)   
-        w.digitalWrite(19, 1)
-        # delay 0.5s
-        sleep(0.5)          
-        w.digitalWrite(19, 0)
-        sleep(0.5)     
-        
-        w.digitalWrite(13, 1)
-        # delay 0.5s
-        sleep(0.05)          
-        w.digitalWrite(13, 0)
-        sleep(0.05)   
-        w.digitalWrite(19, 1)
-        # delay 0.5s
-        sleep(0.05)          
-        w.digitalWrite(19, 0)
-        sleep(0.05)             
-        w.digitalWrite(13, 1)
- 
+        w.softPwmWrite(19,100-helligkeit) 
+        w.softPwmWrite(13,helligkeit)
+        sleep(0.01)
+        helligkeit += 1
+        if helligkeit > 100:
+            helligkeit = 0
+         
+
 finally:
     # turn all pins off
     all_off()
