@@ -1,0 +1,35 @@
+<!-- based on https://stackoverflow.com/questions/16608296/websocket-javascript-client-and-python-server-retreiving-garbage-in-output -->
+<html>
+<head>
+    <title>WebSockets</title> 
+    <script type="application/javascript">
+        var ws;
+
+        function init() {
+            var servermsg = document.getElementById("servermsg");
+            ws = new WebSocket("ws://127.0.0.1:9999/");
+            ws.onopen = function(){
+                servermsg.innerHTML = servermsg.innerHTML + "<br>Server connected";
+            };
+            ws.onmessage = function(e){
+                servermsg.innerHTML = servermsg.innerHTML + "<br><< Recieved data: " + e.data;
+            };
+            ws.onclose = function(){
+                servermsg.innerHTML = servermsg.innerHTML + "<br>Server disconnected";
+            };
+        }
+        function postmsg(){
+            var text = document.getElementById("magnet0").value;
+            ws.send(text);
+            servermsg.innerHTML = servermsg.innerHTML + "<br>>> Data sent: " + text;
+        }
+    </script>
+</head>
+<body onload="init()">
+    <form>
+	<input type="range" id="magnet0" min=0 max=100 onchange="postmsg();" oninput="postmsg();" />
+    </form>
+    <div id="servermsg"><h1>Message log:</h1></div>
+</body>
+
+</html>

@@ -20,6 +20,46 @@ function setup()
     //document.getElementById("magnet3").value = document.getElementById("magnet3").defaultValue;
     document.getElementById("anzeige3").value = document.getElementById("magnet3").value;
 }
+
+var ws;
+
+function init() {
+    var servermsg = document.getElementById("servermsg");
+    ws = new WebSocket("ws://192.168.2.241:9999/");
+    ws.onopen = function(){
+        servermsg.innerHTML = servermsg.innerHTML + "<br>Server connected";
+    };
+    ws.onmessage = function(e){
+        servermsg.innerHTML = servermsg.innerHTML + "<br><< Received data: " + e.data;
+    };
+    ws.onclose = function(){
+        servermsg.innerHTML = servermsg.innerHTML + "<br>Server disconnected";
+    };
+}
+
+function postmsg0(){
+    var text = "0 " + document.getElementById("magnet0").value;
+    ws.send(text);
+    servermsg.innerHTML = servermsg.innerHTML + "<br>>> Data sent: " + text;
+}
+
+function postmsg1(){
+    var text = "1 " + document.getElementById("magnet1").value;
+    ws.send(text);
+    servermsg.innerHTML = servermsg.innerHTML + "<br>>> Data sent: " + text;
+}
+
+function postmsg2(){
+    var text = "2 " + document.getElementById("magnet2").value;
+    ws.send(text);
+    servermsg.innerHTML = servermsg.innerHTML + "<br>>> Data sent: " + text;
+}
+
+function postmsg3(){
+    var text = "3 " + document.getElementById("magnet3").value;
+    ws.send(text);
+    servermsg.innerHTML = servermsg.innerHTML + "<br>>> Data sent: " + text;
+}
 </script>
 
 <style>
@@ -30,7 +70,7 @@ input.vertical {
 </style>
 
 </head>
-<body onload="setup()">
+<body onload="init()">
 
 <form oninput="anzeige0.value=magnet0.value; 
                anzeige1.value=magnet1.value; 
@@ -40,22 +80,23 @@ input.vertical {
 >
 
 Magnet 0:
-<input type="range" name="magnet0" id="magnet0" min="0" max="100" step="1" style="width:2%; height:100%" class="vertical" orient="vertical" oninput="this.form.submit()" /> 
+<input type="range" name="magnet0" id="magnet0" min="0" max="100" step="1" style="width:2%; height:100%" class="vertical" orient="vertical" oninput="postmsg0()" onchange="postmsg0();" /> 
 <output name="anzeige0" id="anzeige0"></output> 
 
 Magnet 1:
-<input type="range" name="magnet1" id="magnet1" min="0" max="100" step="1" class="vertical" orient="vertical" style="width:2%; height:100%" /> 
+<input type="range" name="magnet1" id="magnet1" min="0" max="100" step="1" class="vertical" orient="vertical" style="width:2%; height:100%" oninput="postmsg1()" onchange="postmsg1();" /> 
 <output name="anzeige1" id="anzeige1"></output> 
 
 Magnet 2:
-<input type="range" name="magnet2" id="magnet2" min="0" max="100" step="1" class="vertical" orient="vertical" style="width:2%; height:100%" /> 
+<input type="range" name="magnet2" id="magnet2" min="0" max="100" step="1" class="vertical" orient="vertical" style="width:2%; height:100%" oninput="postmsg2()" onchange="postmsg2();" /> 
 <output name="anzeige2" id="anzeige2"></output> 
 
 Magnet 3:
-<input type="range" name="magnet3" id="magnet3" min="0" max="100" step="1" class="vertical" orient="vertical" style="width:2%; height:100%" /> 
+<input type="range" name="magnet3" id="magnet3" min="0" max="100" step="1" class="vertical" orient="vertical" style="width:2%; height:100%" oninput="postmsg3()" onchange="postmsg3();" /> 
 <output name="anzeige3" id="anzeige3"></output>
 <input type="submit" value="set"/>
 </form>
+<div id="servermsg"><h1>Message log:</h1></div>
 </body>
 </html>
 
