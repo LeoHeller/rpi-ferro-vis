@@ -137,16 +137,22 @@ if __name__ == "__main__":
     
     # print(sys.path)
     
-    gpio.setup()
+    try:
+        gpio.setup()
 
-    def simpleprint(self, message):
-        print("message %s" % message)
-        actor = int(message.split()[0])
-        wert  = int(message.split()[1])  
-        if 0 <= actor <= 3:
-            print("actor  %d, wert %d" % (actor, wert))
-            gpio.mag_st(actor, wert)
+        def simpleprint(self, message):
+            print("message %s" % message)
+            actor = int(message.split()[0])
+            wert  = int(message.split()[1])  
+            if 0 <= actor <= 3:
+                print("actor  %d, wert %d" % (actor, wert))
+                gpio.mag_st(actor, wert)
 
-    WebSocketServer(port, simpleprint).serve()
+        WebSocketServer(port, simpleprint).serve()
+
+    finally:
+       # turn all pins off
+       gpio.all_off()
+
 
 
