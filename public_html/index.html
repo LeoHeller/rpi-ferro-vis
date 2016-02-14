@@ -7,25 +7,26 @@
         function setup()
         {
             document.getElementById("magnet0").defaultValue = 0;
-            //document.getElementById("magnet0").value = document.getElementById("magnet0").defaultValue;
+            document.getElementById("magnet0").value = document.getElementById("magnet0").defaultValue;
             document.getElementById("anzeige0").value = document.getElementById("magnet0").value;
             
             document.getElementById("magnet1").defaultValue = 0;
-            //document.getElementById("magnet1").value = document.getElementById("magnet1").defaultValue;
+            document.getElementById("magnet1").value = document.getElementById("magnet1").defaultValue;
             document.getElementById("anzeige1").value = document.getElementById("magnet1").value;
 
             document.getElementById("magnet2").defaultValue = 0;
-            //document.getElementById("magnet2").value = document.getElementById("magnet2").defaultValue;
+            document.getElementById("magnet2").value = document.getElementById("magnet2").defaultValue;
             document.getElementById("anzeige2").value = document.getElementById("magnet2").value;
 
             document.getElementById("magnet3").defaultValue = 0;
-            //document.getElementById("magnet3").value = document.getElementById("magnet3").defaultValue;
+            document.getElementById("magnet3").value = document.getElementById("magnet3").defaultValue;
             document.getElementById("anzeige3").value = document.getElementById("magnet3").value;
         }
 
         var ws;
 
         function init() {
+            setup();
             var servermsg = document.getElementById("servermsg");
             ws = new WebSocket("ws://192.168.2.241:9999/");
             ws.onopen = function(){
@@ -82,8 +83,8 @@
 >
 <div>
     <div style="overflow: hidden;">
-        <div style="float:left; margin-right: 0%;">
-            <div>
+        <div style="float:left;padding-right:20px">
+            <div style="">
                 Magnet 1: <output name="anzeige0" id="anzeige0" />
             </div>
             <div style="text-align: center;">
@@ -92,28 +93,28 @@
         </div>
         <div style="float:left">
             <div>
-                Magnet 2: <output name="anzeige3" <outputid="anzeige3" /> 
+                Magnet 2: <output name="anzeige1" id="anzeige1" /> 
             </div>
             <div style="text-align: center;">
-                <input type="range" name="magnet3" id="magnet3" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg3()" onchange="postmsg3();" />
+                <input type="range" name="magnet1" id="magnet1" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg1()" onchange="postmsg1();" />
             </div>
         </div>
     </div>
     <div style="overflow: hidden;">
-        <div style="float:left; margin-right:10%">
+        <div style="float:left;padding-right:20px">
             <div>    
-                Magnet 3: <output name="anzeige1" id="anzeige1" /> 
+                Magnet 3: <output name="anzeige2" id="anzeige2" /> 
             </div>
             <div style="text-align: center;">           
-                <input type="range" name="magnet1" id="magnet1" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg1()" onchange="postmsg1();" />
+                <input type="range" name="magnet2" id="magnet2" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg2()" onchange="postmsg2();" />
             </div>        
         </div>
         <div style="float:left">
             <div>            
-                Magnet 4: <output name="anzeige2" id="anzeige2"></output> 
+                Magnet 4: <output name="anzeige3" id="anzeige3"></output> 
             </div>            
             <div style="text-align: center;">
-                <input type="range" name="magnet2" id="magnet2" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg2()" onchange="postmsg2();" />
+                <input type="range" name="magnet3" id="magnet3" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg3()" onchange="postmsg3();" />
             </div>        
         </div>
     </div>
