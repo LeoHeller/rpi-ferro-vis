@@ -17,57 +17,12 @@ def all_off():
 
 def main():
     setup()
-    try:
-        sleep(5)
+    
+    
 
-        # test der relais:
-        #magnet(0,0,1)
-        #sleep(1)
-        #magnet(1,0,1)
-        #sleep(1)
-        #magnet(2,0,1)
-        #sleep(1)
-        #magnet(3,0,1)
-        #sleep(10)
-	
-        # test der magneten und polaritaet:
-        #magnet(0,40,1)
-        #sleep(9)
-        #magnet(0,00,0)
-        #magnet(1,40,0)
-        #sleep(9)
-        #magnet(1,00,0)
-        #magnet(2,40,1)
-        #sleep(9)
-        #magnet(2,00,0)
-        #magnet(3,40,0)
-
-        # kreisbewegung:
-        magnet(0,50,0)
-        magnet(1,50,1)
-        magnet(2,50,0)
-        magnet(3,50,1)
-
-        for rot in range(1,4):
-          for mag in range(0,3):
-            mag_st(mag,100)
-            mag_st(mag-1,50)
-            sleep(1)
-
-        sleep(9)
-	
-        # helligkeit = 10
-        # while True:
-            # magnet (2,helligkeit,0) 
-            # sleep(0.01)
-            # helligkeit += 1
-            # if helligkeit > 100:
-                # helligkeit = 0
-             
-
-    finally:
+    # finally:
          # turn all pins off
-        all_off()
+        # all_off()
 
 def setup():
     # use Gpio pin numbering
@@ -75,12 +30,12 @@ def setup():
 
     # polarity pins are outputs:
     for pin in pins_pol:
-        w.pinMode(pin, 1)
-        w.digitalWrite(pin,0)
+        w.pinMode(pin, 1)           # defined as output 
+        w.digitalWrite(pin,0)       # all output off
 
     # PWM pins:
     for pin in pins_pwm:
-        w.softPwmCreate(pin,0,100)
+        w.softPwmCreate(pin,0,100)  #define pin as pwm output      
 
     # all magnets turned off
     magnet(0,0,0)
@@ -104,6 +59,13 @@ def mag_st(nummer, staerke):
         print("mag_st: falscher Parameter. Magnet=" + str(nummer) + ", Staerke=" + str(staerke))
         return -1
     w.softPwmWrite(pins_pwm[nummer],staerke)
+    return 0
+
+def pol(nummer,polaritaet):
+    if not ((0 <= nummer <=3) and  (0<= polaritaet <=1)):
+        print("magnet: falscher Parameter. Magnet=" + str(nummer) + ", Polaritaet=" + str(polaritaet))   
+        return -1
+    w.digitalWrite(pins_pol[nummer],polaritaet)
     return 0
 
 if __name__ == "__main__":

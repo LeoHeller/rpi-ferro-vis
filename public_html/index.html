@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta charset="UTF-8"> 
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="style.css" />
@@ -21,6 +22,11 @@
             document.getElementById("magnet3").defaultValue = 0;
             document.getElementById("magnet3").value = document.getElementById("magnet3").defaultValue;
             document.getElementById("anzeige3").value = document.getElementById("magnet3").value;
+
+            document.getElementById("onoffswitch1").checked = "true";
+            document.getElementById("onoffswitch2").checked = "true";
+            document.getElementById("onoffswitch3").checked = "true";
+            document.getElementById("onoffswitch4").checked = "true";
         }
 
         var ws;
@@ -28,7 +34,7 @@
         function init() {
             setup();
             var servermsg = document.getElementById("servermsg");
-            ws = new WebSocket("ws://192.168.2.241:9999/");
+            ws = new WebSocket("ws://192.168.1.241:9999/");
             ws.onopen = function(){
                 servermsg.innerHTML = servermsg.innerHTML + "<br>Server connected";
             };
@@ -63,14 +69,84 @@
             ws.send(text);
             servermsg.innerHTML = servermsg.innerHTML + "<br>>> Data sent: " + text;
         }
+        function postmsg4(){
+            var text = "4 " + document.getElementById("onoffswitch1").checked;
+            ws.send(text);
+            servermsg.innerHTML = servermsg.innerHTML + "<br>>> Data sent: " + text;
+        }
+
+        function postmsg5(){
+            var text = "5 " + document.getElementById("onoffswitch2").checked;
+            ws.send(text);
+            servermsg.innerHTML = servermsg.innerHTML + "<br>>> Data sent: " + text;
+        }
+
+        function postmsg6(){
+            var text = "6 " + document.getElementById("onoffswitch3").checked;
+            ws.send(text);
+            servermsg.innerHTML = servermsg.innerHTML + "<br>>> Data sent: " + text;
+        }
+
+        function postmsg7(){
+            var text = "7 " + document.getElementById("onoffswitch4").checked;
+            ws.send(text);
+            servermsg.innerHTML = servermsg.innerHTML + "<br>>> Data sent: " + text;
+        }
     </script>
 
     <style>
         input.vertical {
-	        -webkit-appearance: slider-vertical;
-	        writing-mode: bt-lr;
+	        -webkit-appearance: slider-vertical;	        writing-mode: bt-lr;
         }
-    </style>
+ 
+    .onoffswitch {
+        position: relative; width: 90px;
+        -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    }
+    .onoffswitch-checkbox {
+        display: none;
+    }
+    .onoffswitch-label {
+        display: block; overflow: hidden; cursor: pointer;
+        border: 2px solid #999999; border-radius: 20px;
+    }
+    .onoffswitch-inner {
+        display: block; width: 200%; margin-left: -100%;
+        transition: margin 0.1s ease-in 0s;
+    }
+    .onoffswitch-inner:before, .onoffswitch-inner:after {
+        display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
+        font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+        box-sizing: border-box;
+    }
+    .onoffswitch-inner:before {
+        content: "Nord";
+        padding-left: 10px;
+        background-color: #F53F36; color: #FFFFFF;
+        value:"on";
+    }
+    .onoffswitch-inner:after {
+        content: "Süd";
+        padding-right: 10px;
+        background-color: #6161F2; color: #FFFFFF;
+        text-align: right;
+        value: "off";
+    }
+    .onoffswitch-switch {
+        display: block; width: 18px; margin: 6px;
+        background: #FFFFFF;
+        position: absolute; top: 0; bottom: 0;
+        right: 56px;
+        border: 2px solid #999999; border-radius: 20px;
+        transition: all 0.1s ease-in 0s; 
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+        margin-left: 0px;
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+        right: 0px; 
+    }
+</style>
 
 </head>
 <body onload="init()">
@@ -79,13 +155,16 @@
                anzeige1.value=magnet1.value; 
                anzeige2.value=magnet2.value; 
                anzeige3.value=magnet3.value;"
-      action="server.py"
->
+        action="server.py">
+
+<table>
+<tr>
+<td>
 <div>
     <div style="overflow: hidden;">
         <div style="float:left;padding-right:20px">
             <div style="">
-                Magnet 1: <output name="anzeige0" id="anzeige0" />
+                Magnet 1: <output name="anzeige0" id="anzeige0" style="width:3em; display:inline-block;color: red;text-align: right;" />
             </div>
             <div style="text-align: center;">
                 <input type="range" name="magnet0" id="magnet0" min="0" max="100" step="1"  class="vertical" orient="vertical" oninput="postmsg0()" onchange="postmsg0();" />
@@ -93,34 +172,78 @@
         </div>
         <div style="float:left">
             <div>
-                Magnet 2: <output name="anzeige1" id="anzeige1" /> 
+                Magnet 4: <output name="anzeige3" id="anzeige3" style="width:3em; display:inline-block;color: red;text-align: right;" /> 
             </div>
             <div style="text-align: center;">
-                <input type="range" name="magnet1" id="magnet1" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg1()" onchange="postmsg1();" />
+                <input type="range" name="magnet3" id="magnet3" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg3()" onchange="postmsg3();" />
             </div>
         </div>
     </div>
     <div style="overflow: hidden;">
         <div style="float:left;padding-right:20px">
             <div>    
-                Magnet 3: <output name="anzeige2" id="anzeige2" /> 
+                Magnet 2: <output name="anzeige1" id="anzeige1" style="width:3em; display:inline-block;color: red;text-align: right;" /> 
             </div>
             <div style="text-align: center;">           
-                <input type="range" name="magnet2" id="magnet2" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg2()" onchange="postmsg2();" />
+                <input type="range" name="magnet1" id="magnet1" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg1()" onchange="postmsg1();" />
             </div>        
         </div>
         <div style="float:left">
             <div>            
-                Magnet 4: <output name="anzeige3" id="anzeige3"></output> 
+                Magnet 3: <output name="anzeige2" id="anzeige2" style="width:3em; display:inline-block;color: red;text-align: right;"></output> 
             </div>            
             <div style="text-align: center;">
-                <input type="range" name="magnet3" id="magnet3" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg3()" onchange="postmsg3();" />
+                <input type="range" name="magnet2" id="magnet2" min="0" max="100" step="1" class="vertical" orient="vertical" oninput="postmsg2()" onchange="postmsg2();" />
             </div>        
         </div>
     </div>
 </div>
-
-
+</td>
+<td>
+<table>
+<tr> 
+<td>
+<div class="onoffswitch">
+      <input type="checkbox" name="onoffswitch4" class="onoffswitch-checkbox" id="onoffswitch4" checked onchange="postmsg7();">
+      <label class="onoffswitch-label" for="onoffswitch4">
+          <span class="onoffswitch-inner"></span>
+          <span class="onoffswitch-switch"></span>
+      </label>
+  </div>
+</td>
+<td>
+<div class="onoffswitch">
+      <input type="checkbox" name="onoffswitch1" class="onoffswitch-checkbox" id="onoffswitch1" checked onchange="postmsg4();">
+      <label class="onoffswitch-label" for="onoffswitch1">
+          <span class="onoffswitch-inner"></span>
+          <span class="onoffswitch-switch"></span>
+      </label>
+  </div>
+</td>
+</tr>
+<tr> 
+<td>
+<div class="onoffswitch">
+      <input type="checkbox" name="onoffswitch3" class="onoffswitch-checkbox" id="onoffswitch3" checked  onchange="postmsg6();">
+      <label class="onoffswitch-label" for="onoffswitch3">
+          <span class="onoffswitch-inner"></span>
+          <span class="onoffswitch-switch"></span>
+      </label>
+  </div>
+</td>
+<td>
+<div class="onoffswitch">
+      <input type="checkbox" name="onoffswitch2" class="onoffswitch-checkbox" id="onoffswitch2" checked  onchange="postmsg5();">
+      <label class="onoffswitch-label" for="onoffswitch2">
+          <span class="onoffswitch-inner"></span>
+          <span class="onoffswitch-switch"></span>
+      </label>
+  </div>
+</td>
+</tr>
+</table>
+</td>
+</table>
 </form>
 </body>
 </html>

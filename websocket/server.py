@@ -41,12 +41,14 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
             length = struct.unpack(">H", self.rfile.read(2))[0]
         elif length == 127:
             length = struct.unpack(">Q", self.rfile.read(8))[0]
+        elif length <= 2:
+            return
         masks = [byte for byte in self.rfile.read(4)]
         decoded = ""
         for char in self.rfile.read(length):
             decoded += chr(char ^ masks[len(decoded) % 4])
         self.on_message(decoded)
-        #print "hallo"
+        # print("hallo" + decoded)
 
 
     def send_message(self, message):
@@ -81,7 +83,11 @@ class WebSocketsHandler(socketserver.StreamRequestHandler):
         # print(">%s<" % upg)
         if upg != "websocket":
             return
+        
         print("Handshaking...")
+        # turn all pins off
+        gpio.all_off()
+
         key = headers['Sec-WebSocket-Key']
         # digest = b64encode(sha1(key + self.magic).hexdigest().decode('hex'))
         # print(key)
@@ -116,7 +122,7 @@ class WebSocketServer(socketserver.TCPServer):
     def __init__(self, port, on_message):
         WebSocketsHandler.on_message = on_message
         socketserver.TCPServer.allow_reuse_address = True
-        socketserver.TCPServer.__init__(self, ("192.168.2.241", port), WebSocketsHandler)
+        socketserver.TCPServer.__init__(self, ("192.168.1.241", port), WebSocketsHandler)
 
 
     def serve(self):
@@ -125,6 +131,7 @@ class WebSocketServer(socketserver.TCPServer):
 
         except KeyboardInterrupt:
             print("Shutting down..")
+            gpio.all_off()
             self.server_close();
             print("bye!")            
             self.shutdown()
@@ -141,15 +148,27 @@ if __name__ == "__main__":
         gpio.setup()
 
         def simpleprint(self, message):
-            print("message %s" % message)
-            actor = int(message.split()[0])
-            wert  = int(message.split()[1])  
-            if 0 <= actor <= 3:
-                print("actor  %d, wert %d" % (actor, wert))
-                gpio.mag_st(actor, wert)
+            # print("message %s" % message)
+            try:
+                actor = int(message.split()[0])
+                wert  = message.split()[1]
+                if 0 <= actor <= 3:
+                    # print("actor  %d, wert %d" % (actor, wert))
+                    gpio.mag_st(actor, int(wert))
 
+                if 4 <= actor <=7:
+                    if wert == "true": 
+                        wert = 0
+                    else: 
+                        wert = 1      
+                    # print("W="+str(wert))                
+                    gpio.pol(actor-4, wert)  
+ 
+            except ValueError:
+                return
+  
         WebSocketServer(port, simpleprint).serve()
-
+        
     finally:
        # turn all pins off
        gpio.all_off()
