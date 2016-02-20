@@ -46,6 +46,11 @@
             };
         }
 
+	function myreset() {
+		// servermsg.innerHTML = servermsg.innerHTML + "<br>reset";
+		location.reload();
+	}
+
         function postmsg0(){
             var text = "0 " + document.getElementById("magnet0").value;
             ws.send(text);
@@ -155,7 +160,7 @@
                anzeige1.value=magnet1.value; 
                anzeige2.value=magnet2.value; 
                anzeige3.value=magnet3.value;"
-        action="server.py">
+      action="server.py">
 
 <table>
 <tr>
@@ -241,10 +246,14 @@
   </div>
 </td>
 </tr>
+<td colspan="2" align="center">
+<button type="button" onclick="myreset()"><h2>RESET</h2></button>
+</td>
 </table>
 </td>
 </table>
 </form>
+<!-- <div id="servermsg"><h1>Message log:</h1></div> -->
 </body>
 </html>
 
