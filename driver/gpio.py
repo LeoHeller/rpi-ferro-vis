@@ -1,9 +1,12 @@
 # load wiringpi
 import wiringpi2 as w
-from time import sleep
+from time import sleep # in s
 
 pins_pwm=[4,17,21,22]
 pins_pol=[18,23,24,25]
+
+mag_value=[0,0,0,0]
+
 
 def all_off():
     for pin in pins_pol:
@@ -11,6 +14,7 @@ def all_off():
 
     for pin in pins_pwm:
         w.softPwmWrite(pin,0)
+    mag_value=[0,0,0,0]
 
 # print raspberry pi board revision
 # print(w.piBoardRev())
@@ -21,7 +25,7 @@ def main():
     
 
     # finally:
-         # turn all pins off
+        # turn all pins off
         # all_off()
 
 def setup():
@@ -50,6 +54,7 @@ def magnet(nummer, staerke, polaritaet):
         print("magnet: falscher Parameter. Magnet=" + str(nummer) + ", Staerke=" + str(staerke) + ", Polaritaet=" + str(polaritaet))
         return -1
     w.softPwmWrite(pins_pwm[nummer],staerke)
+    mag_value[nummer] = staerke
     w.digitalWrite(pins_pol[nummer],polaritaet)
     return 0
     
@@ -59,13 +64,19 @@ def mag_st(nummer, staerke):
         print("mag_st: falscher Parameter. Magnet=" + str(nummer) + ", Staerke=" + str(staerke))
         return -1
     w.softPwmWrite(pins_pwm[nummer],staerke)
+    mag_value[nummer] = staerke
     return 0
 
 def pol(nummer,polaritaet):
     if not ((0 <= nummer <=3) and  (0<= polaritaet <=1)):
         print("magnet: falscher Parameter. Magnet=" + str(nummer) + ", Polaritaet=" + str(polaritaet))   
         return -1
+    
+    w.softPwmWrite(pins_pwm[nummer],0) # magnet abschalten, bevor wir die Polaritaet umschalten
+    sleep(.1)
     w.digitalWrite(pins_pol[nummer],polaritaet)
+    sleep(.1)
+    w.softPwmWrite(pins_pwm[nummer],mag_value[nummer])# magnet wieder auf vorherige Staerke schalten
     return 0
 
 if __name__ == "__main__":
