@@ -20,17 +20,19 @@ def all_off():
 # print(w.piBoardRev())
 
 def main():
-    setup()
+    try:
+        setup()
     
     
 
-    # finally:
+    finally:
         # turn all pins off
-        # all_off()
+        all_off()
 
 def setup():
     # use Gpio pin numbering
-    w.wiringPiSetupGpio()
+    # w.wiringPiSetupGpio()
+    w.wiringPiSetupSys() # use the non-root mode. Needs to export pins via gpio first!
 
     # polarity pins are outputs:
     for pin in pins_pol:
@@ -59,6 +61,10 @@ def magnet(nummer, staerke, polaritaet):
     return 0
     
 def mag_st(nummer, staerke):
+    if staerke < 0:
+        staerke = 0
+    if staerke > 100:
+        staerke = 100
     if not ((0 <= nummer <=3) and (0<= staerke <= 100)):
         #fehler        
         print("mag_st: falscher Parameter. Magnet=" + str(nummer) + ", Staerke=" + str(staerke))
